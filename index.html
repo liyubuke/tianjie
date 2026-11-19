@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>录音笔天阶功法</title>
+<style>
+:root{--bg:#F5F7FA;--card:#fff;--ink:#132033;--muted:#5A6678;--line:#DBE1EA;--acc:#1E58D6;--soft:#E7EEFC;--code:#EEF2F7}
+@media (prefers-color-scheme:dark){:root{--bg:#0E141E;--card:#151D2A;--ink:#E4E9F1;--muted:#98A4B5;--line:#273244;--acc:#7AA2FF;--soft:#1A2741;--code:#1B2433}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.75 "PingFang SC","Microsoft YaHei",system-ui,sans-serif;padding:40px max(16px,4vw) 60px}
+main{max-width:860px;margin:0 auto;display:grid;gap:28px}
+h1{font:800 clamp(1.9rem,5vw,2.6rem)/1.25 "Songti SC","STSong",serif;margin:0}h2{font-size:1.15rem;margin:0}
+.lede{color:var(--muted);margin:6px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:12px}
+.cmd{background:var(--code);border-radius:8px;padding:12px 14px;font:13.5px/1.6 Menlo,Consolas,monospace;word-break:break-all;display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.cmd button{flex:none;font:inherit;font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:2px 10px;cursor:pointer}
+.tag{font-size:12px;color:var(--acc);font-weight:700;letter-spacing:.06em}
+.muted{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:680px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lv{background:var(--soft);border-radius:10px;padding:12px 14px}.lv b{display:block;color:var(--acc)}.lv span{font-size:13px;color:var(--muted)}
+ol{margin:0;padding-left:1.3em}
+</style></head><body><main>
+<header><div class="tag">讯飞录音笔 × 大模型</div><h1>录音笔天阶功法</h1>
+<p class="lede">18 门把录音交给 AI 干活的用法：写周报、个性化纪要、写改校汇报材料、个人知识库……装好后对 AI 说「录音笔天阶功法」，选一门直接开练。</p></header>
+
+<section class="card"><span class="tag">最省事</span><h2>把这句话发给你的 AI 助手</h2>
+<p class="muted">Claude Code、Codex、WorkBuddy、千问、豆包都可以。AI 会自己下载安装，缺的「讯飞录音笔（智声互联）」「讯飞听见」组件也会一起装上。</p>
+<div class="cmd"><code id="c1">请帮我执行这条命令安装「录音笔天阶功法」：curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash</code><button data-t="c1">复制</button></div></section>
+
+<section class="card"><span class="tag">自己在终端装</span>
+<h2>Mac / Linux</h2><div class="cmd"><code id="c2">curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash</code><button data-t="c2">复制</button></div>
+<h2>Windows（PowerShell）</h2><div class="cmd"><code id="c3">irm https://liyubuke.github.io/tianjie/install.ps1 | iex</code><button data-t="c3">复制</button></div>
+<p class="muted">Windows 版会装好本技能和讯飞录音笔组件；讯飞听见请在 WorkBuddy「技能」里搜索安装。</p></section>
+
+<section class="card"><h2>装好以后</h2><ol>
+<li>重启 AI 助手，对它说「录音笔天阶功法」，会出现功法菜单；</li>
+<li>回复编号开练，比如「5」写周报；也可以直接说「用这周的录音写周报」；</li>
+<li>第一次读录音会弹出讯飞账号授权页，登录并同意即可。</li></ol>
+<div class="grid">
+<div class="lv"><b>黄阶</b><span>个性化纪要、核实原话、口述起草、双语纪要</span></div>
+<div class="lv"><b>玄阶</b><span>写周报、待办闭环、会前简报、主题追踪</span></div>
+<div class="lv"><b>地阶</b><span>写材料、改材料、校材料、模拟追问、访谈洞察、培训成 SOP、交接手册</span></div>
+<div class="lv"><b>天阶</b><span>个人知识库、定时推送、误识别词表</span></div></div></section>
+<p class="muted">本技能只读你的录音，不上传、不修改、不删除录音，也不会替你发消息。作者：李钰</p>
+</main>
+<script>
+document.querySelectorAll('button[data-t]').forEach(function(b){b.addEventListener('click',function(){var t=document.getElementById(b.dataset.t).innerText;var d=function(){b.textContent='已复制';setTimeout(function(){b.textContent='复制'},1500)};try{navigator.clipboard.writeText(t).then(d,function(){})}catch(e){}})});
+</script></body></html>
