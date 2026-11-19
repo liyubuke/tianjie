@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # 录音笔天阶功法 · 一键安装（macOS / Linux）
 # 用法：curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash
-#   可选参数：--no-deps   只装本技能，不检查讯飞听见 / 讯飞录音笔组件
+#   在某个 AI 工具里执行：只装到这个工具。
+#   自己在终端执行：列出本机的 AI 工具，选择装到哪个。
+#   可选参数：--target=claude|codex|workbuddy|qwen|doubao|all（可用逗号写多个）
+#             --no-deps   只装本技能，不检查讯飞听见 / 讯飞录音笔组件
 #             --yes       不询问，缺组件直接安装（AI 助手代为执行时默认如此）
 set -o pipefail
 
@@ -10,9 +13,9 @@ SKILL="录音笔天阶功法"
 RECORDER_CMD="curl -fsSL https://open.iflyrecorder.com/skills/iflytek-recorder/install.sh | bash"
 SKILLHUB_INSTALL="https://skillhub.cn/install/install.sh"
 
-NO_DEPS=0; ASSUME_YES=0
+NO_DEPS=0; ASSUME_YES=0; WANT=""
 for a in "$@"; do
-  case "${a}" in --no-deps) NO_DEPS=1 ;; --yes|-y) ASSUME_YES=1 ;; esac
+  case "${a}" in --no-deps) NO_DEPS=1 ;; --yes|-y) ASSUME_YES=1 ;; --target=*) WANT="${a#--target=}" ;; esac
 done
 
 say()  { printf '%s\n' "$*"; }
@@ -38,20 +41,68 @@ else
   [ -f "${SRC}/SKILL.md" ] || { say "技能包内容不完整"; exit 1; }
 fi
 
-# ---------- 2. 找到本机的 AI 工具 ----------
-# 格式：名称|技能目录|讯飞录音笔安装目标
-TOOLS=()
-[ -d "${HOME}/.claude" ]     && TOOLS+=("Claude Code|${HOME}/.claude/skills|claude")
-[ -d "${HOME}/.codex" ]      && TOOLS+=("Codex|${HOME}/.codex/skills|codex")
-[ -d "${HOME}/.workbuddy" ]  && TOOLS+=("WorkBuddy|${HOME}/.workbuddy/skills|workbuddy")
-[ -d "${HOME}/.qwenworkcn" ] && TOOLS+=("千问|${HOME}/.qwenworkcn/skills|workspace")
-DOUBAO="${HOME}/Library/Containers/com.bot.neotix.doubao/Data/Doubao"
-[ -d "${DOUBAO}" ]           && TOOLS+=("豆包|${DOUBAO}/skills|workspace")
+# ---------- 2. 决定装到哪个 AI 工具 ----------
+# 每个工具：键|名称|技能目录|讯飞录音笔安装目标
+REAL_HOME="${HOME}"
+case "${HOME}" in */Library/Containers/com.bot.neotix.doubao/Data) DOUBAO_DIR="${HOME}/Doubao" ;; *) DOUBAO_DIR="${HOME}/Library/Containers/com.bot.neotix.doubao/Data/Doubao" ;; esac
+tool_line() {
+  case "$1" in
+    claude)    echo "claude|Claude Code|${HOME}/.claude/skills|claude" ;;
+    codex)     echo "codex|Codex|${HOME}/.codex/skills|codex" ;;
+    workbuddy) echo "workbuddy|WorkBuddy|${HOME}/.workbuddy/skills|workbuddy" ;;
+    qwen)      echo "qwen|千问|${HOME}/.qwenworkcn/skills|workspace" ;;
+    doubao)    echo "doubao|豆包|${DOUBAO_DIR}/skills|workspace" ;;
+  esac
+}
+installed_tools() {   # 本机有配置目录的工具
+  [ -d "${HOME}/.claude" ]     && echo claude
+  [ -d "${HOME}/.codex" ]      && echo codex
+  [ -d "${HOME}/.workbuddy" ]  && echo workbuddy
+  [ -d "${HOME}/.qwenworkcn" ] && echo qwen
+  [ -d "${DOUBAO_DIR}" ]       && echo doubao
+}
+detect_host() {       # 当前是哪个 AI 工具在执行本脚本
+  local b; b="$(printf '%s' "${__CFBundleIdentifier:-}" | tr 'A-Z' 'a-z')"
+  if [ -n "${CLAUDECODE:-}${CLAUDE_CODE_ENTRYPOINT:-}" ]; then echo claude; return; fi
+  if [ -n "${CODEX_SESSION_ID:-}${CODEX_THREAD_ID:-}${CODEX_VERSION:-}${CODEX_APP_TOOLS_PIPE_PATH:-}" ] || [[ "${b}" == *codex* ]]; then echo codex; return; fi
+  if [ -n "${WORKBUDDY_CONFIG_DIR:-}${WORKBUDDY_HOME:-}${WORKBUDDY_APP_NAME:-}" ] || [[ "${b}" == *workbuddy* ]]; then echo workbuddy; return; fi
+  if [[ "${b}" == *qwenwork* ]] || env | grep -q '^QWENWORK'; then echo qwen; return; fi
+  if [[ "${b}" == *doubao* ]] || [[ "${HOME}" == *com.bot.neotix.doubao* ]]; then echo doubao; return; fi
+}
 
-if [ ${#TOOLS[@]} -eq 0 ]; then
-  TOOLS+=("当前目录|${PWD}/skills|workspace")
-  warn "没找到 Claude Code / Codex / WorkBuddy / 千问 / 豆包 的配置目录，装到当前目录的 skills/ 下。"
+KEYS=""
+HOST="$(detect_host)"
+if [ -n "${WANT}" ]; then
+  if [ "${WANT}" = all ]; then KEYS="$(installed_tools | tr '\n' ' ')"; else KEYS="$(printf '%s' "${WANT}" | tr ',' ' ')"; fi
+elif [ -n "${HOST}" ]; then
+  KEYS="${HOST}"
+  say "检测到你在 $(tool_line "${HOST}" | cut -d'|' -f2) 里执行，只装到这个工具。"
+else
+  AVAIL=($(installed_tools))
+  if [ ${#AVAIL[@]} -eq 0 ]; then
+    warn "没找到 Claude Code / Codex / WorkBuddy / 千问 / 豆包 的配置目录。"
+    warn "装好其中一个 AI 工具后再运行，或加参数指定，例如：--target=claude"
+    exit 1
+  elif [ ${#AVAIL[@]} -eq 1 ]; then
+    KEYS="${AVAIL[0]}"
+  elif [ -r /dev/tty ] && [ -t 1 ]; then
+    say ""; say "本机检测到这些 AI 工具，要装到哪个？"
+    n=0; for k in "${AVAIL[@]}"; do n=$((n+1)); say "  ${n}. $(tool_line "${k}" | cut -d'|' -f2)"; done
+    say "  a. 全部"
+    printf '输入编号（多个用空格隔开，如 1 3）：'; read -r pick </dev/tty || pick=""
+    for p in ${pick}; do
+      case "${p}" in a|A) KEYS="${AVAIL[*]}" ;; *[!0-9]*|'') ;; *) [ "${p}" -ge 1 ] && [ "${p}" -le ${#AVAIL[@]} ] && KEYS="${KEYS} ${AVAIL[$((p-1))]}" ;; esac
+    done
+    [ -z "${KEYS// /}" ] && { say "没有选择，已退出。"; exit 1; }
+  else
+    warn "无法判断要装到哪个 AI 工具。请在要使用的 AI 工具里执行这条命令，"
+    warn "或者加参数指定，例如：curl -fsSL ${SITE}/install.sh | bash -s -- --target=workbuddy"
+    exit 1
+  fi
 fi
+TOOLS=()
+for k in ${KEYS}; do l="$(tool_line "${k}")"; [ -n "${l}" ] && TOOLS+=("${l#*|}"); done
+[ ${#TOOLS[@]} -eq 0 ] && { warn "--target 只能是 claude、codex、workbuddy、qwen、doubao、all"; exit 1; }
 
 # ---------- 3. 安装本技能 ----------
 say ""; say "安装技能到："

@@ -1,5 +1,6 @@
 # Recorder Tianjie Gongfa - one-line installer for Windows (PowerShell 5.1+)
 # Usage: irm https://liyubuke.github.io/tianjie/install.ps1 | iex
+# Inside an AI tool: installs only into that tool. In a terminal: asks which tool. Or set $env:TIANJIE_TARGET='workbuddy' first.
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 function T([string]$k) { [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($k)) }
@@ -10,7 +11,13 @@ $S = @{
   'dlfail' = '5LiL6L295aSx6LSl77yM6K+35qOA5p+l572R57uc77yIR2l0SHViIOacieaXtumcgOimgeWkmuivleWHoOasoe+8ieWQjumHjeivle+8mg=='
   'installto' = '5a6J6KOF5oqA6IO95Yiw77ya'
   'skip' = '5rKh5pyJ5YaZ5YWl5p2D6ZmQ77yM5bey6Lez6L+H77ya'
-  'none' = '5rKh5om+5YiwIENsYXVkZSBDb2RlIC8gQ29kZXggLyBXb3JrQnVkZHkgLyDljYPpl64g55qE6YWN572u55uu5b2V77yM6KOF5Yiw5b2T5YmN55uu5b2V55qEIHNraWxsc1wg5LiL44CC'
+  'none' = '5rKh5om+5YiwIENsYXVkZSBDb2RlIC8gQ29kZXggLyBXb3JrQnVkZHkgLyDljYPpl64g55qE6YWN572u55uu5b2V44CC6KOF5aW95YW25Lit5LiA5LiqIEFJIOW3peWFt+WQjuWGjei/kOihjO+8jOaIluWKoOWPguaVsOaMh+Wumu+8jOS+i+WmgiAtLXRhcmdldD13b3JrYnVkZHk='
+  'hostonly' = '5qOA5rWL5Yiw5L2g5Zyo6L+Z5LiqIEFJIOW3peWFt+mHjOaJp+ihjO+8jOWPquijheWIsOWug++8mg=='
+  'pick' = '5pys5py65qOA5rWL5Yiw6L+Z5LqbIEFJIOW3peWFt++8jOimgeijheWIsOWTquS4qu+8nw=='
+  'all' = '5YWo6YOo'
+  'pickq' = '6L6T5YWl57yW5Y+377yI5aSa5Liq55So56m65qC86ZqU5byA77yM5aaCIDEgM++8iQ=='
+  'nopick' = '5rKh5pyJ6YCJ5oup77yM5bey6YCA5Ye644CC'
+  'badtarget' = 'LS10YXJnZXQg5Y+q6IO95pivIGNsYXVkZeOAgWNvZGV444CBd29ya2J1ZGR544CBcXdlbuOAgWFsbA=='
   'check' = '5qOA5p+l6K+75b2V6Z+z55qE5Lik5Liq57uE5Lu277yI6K6v6aOe5b2V6Z+z56yUID0g5pm65aOw5LqS6IGU77yM6K6v6aOe5ZCs6KeB77yJ77ya'
   'rec' = '6K6v6aOe5b2V6Z+z56yU'
   'xftj' = '6K6v6aOe5ZCs6KeB'
@@ -39,12 +46,43 @@ try {
   $Src = Join-Path (Join-Path $Work 'x') $SkillName
 
   $U = $env:USERPROFILE
-  $Tools = @()
-  if (Test-Path "$U\.claude")     { $Tools += ,@('Claude Code', "$U\.claude\skills", 'claude') }
-  if (Test-Path "$U\.codex")      { $Tools += ,@('Codex', "$U\.codex\skills", 'codex') }
-  if (Test-Path "$U\.workbuddy")  { $Tools += ,@('WorkBuddy', "$U\.workbuddy\skills", 'workbuddy') }
-  if (Test-Path "$U\.qwenworkcn") { $Tools += ,@((T '5Y2D6Zeu'), "$U\.qwenworkcn\skills", 'workspace') }
-  if ($Tools.Count -eq 0) { Write-Host (T $S.none); $Tools += ,@('.', (Join-Path (Get-Location) 'skills'), 'workspace') }
+  $All = [ordered]@{
+    'claude'    = @('Claude Code', "$U\.claude\skills", 'claude', "$U\.claude")
+    'codex'     = @('Codex', "$U\.codex\skills", 'codex', "$U\.codex")
+    'workbuddy' = @('WorkBuddy', "$U\.workbuddy\skills", 'workbuddy', "$U\.workbuddy")
+    'qwen'      = @((T '5Y2D6Zeu'), "$U\.qwenworkcn\skills", 'workspace', "$U\.qwenworkcn")
+  }
+  $want = ''
+  foreach ($a in $args) { if ($a -like '--target=*') { $want = $a.Substring(9) } }
+  if (-not $want -and $env:TIANJIE_TARGET) { $want = $env:TIANJIE_TARGET }
+  $host_ = ''
+  if ($env:CLAUDECODE -or $env:CLAUDE_CODE_ENTRYPOINT) { $host_ = 'claude' }
+  elseif ($env:CODEX_SESSION_ID -or $env:CODEX_THREAD_ID -or $env:CODEX_VERSION -or $env:CODEX_APP_TOOLS_PIPE_PATH) { $host_ = 'codex' }
+  elseif ($env:WORKBUDDY_CONFIG_DIR -or $env:WORKBUDDY_HOME -or $env:WORKBUDDY_APP_NAME) { $host_ = 'workbuddy' }
+  elseif (@(Get-ChildItem env: | Where-Object { $_.Name -like 'QWENWORK*' }).Count -gt 0) { $host_ = 'qwen' }
+  $avail = @($All.Keys | Where-Object { Test-Path $All[$_][3] })
+  $keys = @()
+  if ($want) {
+    if ($want -eq 'all') { $keys = $avail } else { $keys = @($want -split ',' | Where-Object { $All.Contains($_) }) }
+  } elseif ($host_) {
+    $keys = @($host_); Write-Host ((T $S.hostonly) + $All[$host_][0])
+  } elseif ($avail.Count -eq 1) {
+    $keys = $avail
+  } elseif ($avail.Count -eq 0) {
+    Write-Host (T $S.none); exit 1
+  } else {
+    Write-Host ''; Write-Host (T $S.pick)
+    for ($i = 0; $i -lt $avail.Count; $i++) { Write-Host ("  " + ($i + 1) + ". " + $All[$avail[$i]][0]) }
+    Write-Host ("  a. " + (T $S.all))
+    $ans = Read-Host (T $S.pickq)
+    foreach ($p in ($ans -split '\s+')) {
+      if ($p -eq 'a' -or $p -eq 'A') { $keys = $avail }
+      elseif ($p -match '^\d+$' -and [int]$p -ge 1 -and [int]$p -le $avail.Count) { $keys += $avail[[int]$p - 1] }
+    }
+    if ($keys.Count -eq 0) { Write-Host (T $S.nopick); exit 1 }
+  }
+  if ($keys.Count -eq 0) { Write-Host (T $S.badtarget); exit 1 }
+  $Tools = @(); foreach ($k in ($keys | Select-Object -Unique)) { $Tools += ,@($All[$k][0], $All[$k][1], $All[$k][2]) }
 
   Write-Host ''; Write-Host (T $S.installto)
   foreach ($t in $Tools) {
