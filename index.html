@@ -21,17 +21,17 @@ ol{margin:0;padding-left:1.3em}
 <header><div class="tag">讯飞录音笔 × 大模型</div><h1>录音笔天阶功法</h1>
 <p class="lede">18 门把录音交给 AI 干活的用法：写周报、个性化纪要、写改校汇报材料、个人知识库……装好后对 AI 说「录音笔天阶功法」，点选一门功法、确认后开练。</p></header>
 
-<section class="card"><span class="tag">最省事</span><h2>把这句话发给你的 AI 助手</h2>
-<p class="muted">Claude Code、Codex、WorkBuddy、千问、豆包都可以。AI 会自己下载安装，缺的「讯飞录音笔（智声互联）」「讯飞听见」组件也会一起装上。</p>
-<div class="cmd"><code id="c1">请帮我执行这条命令安装「录音笔天阶功法」：curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash</code><button data-t="c1">复制</button></div></section>
+<section class="card"><span class="tag">最省事</span><h2>在你要用的 AI 助手里，发这句话</h2>
+<p class="muted">Claude Code、Codex、WorkBuddy、千问、豆包都可以。AI 会把技能只装进这个工具，然后问你用哪个录音 App（讯飞录音笔、讯飞听见、Deepting），装好对应组件，带你登录授权，最后让你选功法开练。</p>
+<div class="cmd"><code id="c1">请帮我安装「录音笔天阶功法」并按提示完成设置：curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash</code><button data-t="c1">复制</button></div></section>
 
 <section class="card"><span class="tag">自己在终端装</span>
 <h2>Mac / Linux</h2><div class="cmd"><code id="c2">curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash</code><button data-t="c2">复制</button></div>
 <h2>Windows（PowerShell）</h2><div class="cmd"><code id="c3">irm https://liyubuke.github.io/tianjie/install.ps1 | iex</code><button data-t="c3">复制</button></div>
-<p class="muted">Windows 版会装好本技能和讯飞录音笔组件；讯飞听见请在 WorkBuddy「技能」里搜索安装。</p></section>
+<p class="muted">终端装完后，打开 AI 助手说「录音笔天阶功法」，它会接着问你用哪个录音 App，并完成组件安装和登录授权。</p></section>
 
 <section class="card"><h2>装好以后</h2><ol>
-<li>重启 AI 助手，对它说「录音笔天阶功法」；</li>
+<li>对 AI 说「录音笔天阶功法」，第一次会先选录音 App 并登录授权；</li>
 <li>先选阶，再选功法，看过确认说明后点「确认开练」；也可以直接说「用这周的录音写周报」；</li>
 <li>第一次读录音会弹出讯飞账号授权页，登录并同意即可。</li></ol>
 <div class="grid">
@@ -39,7 +39,8 @@ ol{margin:0;padding-left:1.3em}
 <div class="lv"><b>玄阶</b><span>写周报、待办闭环、会前简报、主题追踪</span></div>
 <div class="lv"><b>地阶</b><span>写材料、改材料、校材料、模拟追问、访谈洞察、培训成 SOP、交接手册</span></div>
 <div class="lv"><b>天阶</b><span>个人知识库、定时推送、误识别词表</span></div></div></section>
-<p class="muted">本技能只读你的录音，不上传、不修改、不删除录音，也不会替你发消息。作者：李钰</p>
+<section class="card"><h2>我有更好的功法</h2><p class="muted">你有好用的录音用法，欢迎发邮件分享，好的功法会加进下一版。也可以在技能里说「我有更好的功法」，AI 会帮你整理成邮件草稿。</p><div class="cmd"><code id="c4">bukeliyu@live.cn</code><button data-t="c4">复制</button></div></section>
+<p class="muted">本技能只读你的录音，不上传、不修改、不删除录音，也不会替你发消息。每天第一次使用会自动检查更新，有新版会提醒你。作者：李钰</p>
 </main>
 <script>
 document.querySelectorAll('button[data-t]').forEach(function(b){b.addEventListener('click',function(){var t=document.getElementById(b.dataset.t).innerText;var d=function(){b.textContent='已复制';setTimeout(function(){b.textContent='复制'},1500)};try{navigator.clipboard.writeText(t).then(d,function(){})}catch(e){}})});

@@ -18,16 +18,16 @@ $S = @{
   'pickq' = '6L6T5YWl57yW5Y+377yI5aSa5Liq55So56m65qC86ZqU5byA77yM5aaCIDEgM++8iQ=='
   'nopick' = '5rKh5pyJ6YCJ5oup77yM5bey6YCA5Ye644CC'
   'badtarget' = 'LS10YXJnZXQg5Y+q6IO95pivIGNsYXVkZeOAgWNvZGV444CBd29ya2J1ZGR544CBcXdlbuOAgWFsbA=='
-  'check' = '5qOA5p+l6K+75b2V6Z+z55qE5Lik5Liq57uE5Lu277yI6K6v6aOe5b2V6Z+z56yUID0g5pm65aOw5LqS6IGU77yM6K6v6aOe5ZCs6KeB77yJ77ya'
-  'rec' = '6K6v6aOe5b2V6Z+z56yU'
-  'xftj' = '6K6v6aOe5ZCs6KeB'
-  'recok' = '6K6v6aOe5b2V6Z+z56yU5bey6KOF5YiwIA=='
-  'recfail' = '6K6v6aOe5b2V6Z+z56yU6Ieq5Yqo5a6J6KOF5aSx6LSl77yM5Y+v5Lul5oqK6L+Z5Y+l5Y+R57uZIEFJIOWKqeaJi++8mmN1cmwgLWZzU0wgaHR0cHM6Ly9vcGVuLmlmbHlyZWNvcmRlci5jb20vc2tpbGxzL2lmbHl0ZWstcmVjb3JkZXIvaW5zdGFsbC5zaCB8IGJhc2g='
-  'nopy' = '5rKh5om+5YiwIFB5dGhvbiAzLjkr77yM6Lez6L+H6K6v6aOe5b2V6Z+z56yU6Ieq5Yqo5a6J6KOF44CC'
-  'xftjtip' = '6K6v6aOe5ZCs6KeB6K+35ZyoIFdvcmtCdWRkeeOAjOS4k+WutiDCtyDmioDog70gwrcg6L+e5o6l5Zmo44CN4oaS44CM5oqA6IO944CN5pCc57Si44CQ6K6v6aOe5ZCs6KeB44CR5a6J6KOF77yM5oiW5oqK6L+Z5Y+l5Y+R57uZIEFJIOWKqeaJi++8mmN1cmwgLWZzU0wgaHR0cHM6Ly9za2lsbGh1Yi5jbi9pbnN0YWxsL2luc3RhbGwuc2ggfCBiYXNoICYmIHNraWxsaHViIGluc3RhbGwgeGZ0ai10cmFuc2NyaWJl'
-  'done' = 'PT0g6KOF5aW95LqGID09'
-  'restart' = '6YeN5ZCv5L2g55qEIEFJIOWKqeaJi++8jOeEtuWQjuWvueWug+ivtO+8muW9lemfs+eslOWkqemYtuWKn+azlQ=='
-  'auth' = '56ys5LiA5qyh6K+75Y+W5b2V6Z+z5pe25Lya5by55Ye66K6v6aOe6LSm5Y+35o6I5p2D6aG177yM55m75b2V5bm25ZCM5oSP5Y2z5Y+v44CC'
+  'done' = 'PT0g5oqA6IO96KOF5aW95LqGID09'
+  'ai0' = '44CQ6K+3IEFJIOWKqeaJi+e7p+e7re+8jOS4jeimgeWBnOOAkQ=='
+  'ai1' = 'MS4g56uL5Y2z6K+75Y+WIA=='
+  'ai1b' = '77yM5oyJ5YW25Lit44CM56ysIDAg5q2l44CN5omn6KGM77yb'
+  'ai2' = 'Mi4g5YWI6Zeu55So5oi355So5ZOq5Liq5b2V6Z+zIEFwcO+8iOiur+mjnuW9lemfs+eslCBBcHAgLyDorq/po57lkKzop4EgQXBwIC8gRGVlcHRpbmcgQXBw77yM5Y+v5aSa6YCJ77yJ77yb'
+  'ai3' = 'My4g5oyJ55So5oi355qE6YCJ5oup5a6J6KOF5a+55bqU57uE5Lu277yM5bm25bim55So5oi35a6M5oiQ6LSm5Y+355m75b2V5ZKM5o6I5p2D77yM55u05Yiw5qOA5p+l6YCa6L+H77yb'
+  'ai4' = 'NC4g54S25ZCO6L+b5YWl44CM6YCJ5Yqf5rOV44CN77yM6K6p55So5oi354K56YCJ5LiA6Zeo5Yqf5rOV5byA57uD44CC'
+  'next0' = '5LiL5LiA5q2l77yaMS4g6YeN5ZCv5L2g55qEIEFJIOWKqeaJi++8jOWvueWug+ivtO+8muW9lemfs+eslOWkqemYtuWKn+azlQ=='
+  'next1' = 'Mi4g5a6D5Lya5YWI6Zeu5L2g55So5ZOq5Liq5b2V6Z+zIEFwcO+8iOiur+mjnuW9lemfs+eslCAvIOiur+mjnuWQrOingSAvIERlZXB0aW5n77yJ77yM'
+  'next2' = 'ICAg5YaN5biu5L2g6KOF5aW95a+55bqU57uE5Lu244CB5omT5byA572R6aG16K6p5L2g55m75b2V5o6I5p2D77yM5a6M5oiQ5ZCO5bCx6IO96YCJ5Yqf5rOV5byA57uD44CC'
 }
 $Site = if ($env:TIANJIE_SITE) { $env:TIANJIE_SITE } else { 'https://liyubuke.github.io/tianjie' }
 $SkillName = T $S.skill
@@ -95,40 +95,13 @@ try {
     } catch { Write-Host ("  [!] " + (T $S.skip) + $t[1]) }
   }
 
-  if ($args -notcontains '--no-deps') {
-    Write-Host ''; Write-Host (T $S.check)
-    $py = $null
-    foreach ($c in @('py -3', 'python', 'python3')) {
-      try { $v = & ([scriptblock]::Create("$c -c `"import sys;print(1 if sys.version_info>=(3,9) else 0)`"")) 2>$null; if ($v -eq '1') { $py = $c; break } } catch {}
-    }
-    $needX = $false
-    foreach ($t in $Tools) {
-      $d = $t[1]
-      $hasR = (Test-Path "$d\recording-assistant-prod\SKILL.md") -or (Test-Path "$d\iflytek-recorder\SKILL.md")
-      $hasX = @(Get-ChildItem -Path $d -Directory -Filter 'xftj-transcribe*' -ErrorAction SilentlyContinue).Count -gt 0
-      $r = if ($hasR) { 'OK' } else { 'X' }; $x = if ($hasX) { 'OK' } else { 'X' }
-      Write-Host ("  " + $t[0] + ": " + (T $S.rec) + " $r   " + (T $S.xftj) + " $x")
-      if (-not $hasX) { $needX = $true }
-      if (-not $hasR) {
-        if ($py) {
-          try {
-            $base = 'https://open.iflyrecorder.com/skills/iflytek-recorder'
-            $shTxt = (Invoke-WebRequest -UseBasicParsing -Uri "$base/install.sh").Content
-            $want = [regex]::Match($shTxt, 'installer_sha256="([0-9a-f]{64})"').Groups[1].Value
-            $ipy = Join-Path $Work 'install.py'
-            Invoke-WebRequest -UseBasicParsing -Uri "$base/install.py" -OutFile $ipy
-            $got = (Get-FileHash -Algorithm SHA256 $ipy).Hash.ToLower()
-            if ($want -and $got -eq $want) {
-              Push-Location (Split-Path $d -Parent)
-              & ([scriptblock]::Create("$py -B `"$ipy`" --target $($t[2])")) | Out-Null
-              Pop-Location
-              if ((Test-Path "$d\recording-assistant-prod\SKILL.md")) { Write-Host ("  [OK] " + (T $S.recok) + $t[0]) } else { throw 'x' }
-            } else { throw 'sha' }
-          } catch { Write-Host ("  [!] " + (T $S.recfail)) }
-        } else { Write-Host ("  [!] " + (T $S.nopy)) }
-      }
-    }
-    if ($needX) { Write-Host ("  [!] " + (T $S.xftjtip)) }
+  Write-Host ''; Write-Host (T $S.done)
+  if ($host_) {
+    Write-Host ''
+    Write-Host (T $S.ai0)
+    Write-Host ((T $S.ai1) + (Join-Path $Tools[0][1] $SkillName) + '\SKILL.md' + (T $S.ai1b))
+    Write-Host (T $S.ai2); Write-Host (T $S.ai3); Write-Host (T $S.ai4)
+  } else {
+    Write-Host (T $S.next0); Write-Host (T $S.next1); Write-Host (T $S.next2)
   }
-  Write-Host ''; Write-Host (T $S.done); Write-Host (T $S.restart); Write-Host (T $S.auth)
 } finally { Remove-Item -Recurse -Force $Work -ErrorAction SilentlyContinue }
