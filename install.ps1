@@ -5,8 +5,9 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 function T([string]$k) { [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($k)) }
 $S = @{
-  'skill' = '5b2V6Z+z56yU5aSp6Zi25Yqf5rOV'
-  'title' = 'PT0g5b2V6Z+z56yU5aSp6Zi25Yqf5rOVIMK3IOWuieijhe+8iFdpbmRvd3PvvIk9PQ=='
+  'skill' = '5b2V6Z+z56yU6auY6Zi255So5rOV'
+  'oldskill' = '5b2V6Z+z56yU5aSp6Zi25Yqf5rOV'
+  'title' = 'PT0g5b2V6Z+z56yU6auY6Zi255So5rOVIMK3IOWuieijhe+8iFdpbmRvd3PvvIk9PQ=='
   'dl' = '5LiL6L295oqA6IO95YyF4oCm4oCm'
   'dlfail' = '5LiL6L295aSx6LSl77yM6K+35qOA5p+l572R57uc77yIR2l0SHViIOacieaXtumcgOimgeWkmuivleWHoOasoe+8ieWQjumHjeivle+8mg=='
   'installto' = '5a6J6KOF5oqA6IO95Yiw77ya'
@@ -24,10 +25,10 @@ $S = @{
   'ai1b' = '77yM5oyJ5YW25Lit44CM56ysIDAg5q2l44CN5omn6KGM77yb'
   'ai2' = 'Mi4g5YWI6Zeu55So5oi355So5ZOq5Liq5b2V6Z+zIEFwcO+8iOiur+mjnuW9lemfs+eslCBBcHAgLyDorq/po57lkKzop4EgQXBwIC8gRGVlcHRpbmcgQXBw77yM5Y+v5aSa6YCJ77yJ77yb'
   'ai3' = 'My4g5oyJ55So5oi355qE6YCJ5oup5a6J6KOF5a+55bqU57uE5Lu277yM5bm25bim55So5oi35a6M5oiQ6LSm5Y+355m75b2V5ZKM5o6I5p2D77yM55u05Yiw5qOA5p+l6YCa6L+H77yb'
-  'ai4' = 'NC4g54S25ZCO6L+b5YWl44CM6YCJ5Yqf5rOV44CN77yM6K6p55So5oi354K56YCJ5LiA6Zeo5Yqf5rOV5byA57uD44CC'
-  'next0' = '5LiL5LiA5q2l77yaMS4g6YeN5ZCv5L2g55qEIEFJIOWKqeaJi++8jOWvueWug+ivtO+8muW9lemfs+eslOWkqemYtuWKn+azlQ=='
+  'ai4' = 'NC4g54S25ZCO6L+b5YWl44CM6YCJ55So5rOV44CN77yM6K6p55So5oi354K56YCJ5LiA56eN55So5rOV5byA5aeL44CC'
+  'next0' = '5LiL5LiA5q2l77yaMS4g6YeN5ZCv5L2g55qEIEFJIOWKqeaJi++8jOWvueWug+ivtO+8muW9lemfs+eslOmrmOmYtueUqOazlQ=='
   'next1' = 'Mi4g5a6D5Lya5YWI6Zeu5L2g55So5ZOq5Liq5b2V6Z+zIEFwcO+8iOiur+mjnuW9lemfs+eslCAvIOiur+mjnuWQrOingSAvIERlZXB0aW5n77yJ77yM'
-  'next2' = 'ICAg5YaN5biu5L2g6KOF5aW95a+55bqU57uE5Lu244CB5omT5byA572R6aG16K6p5L2g55m75b2V5o6I5p2D77yM5a6M5oiQ5ZCO5bCx6IO96YCJ5Yqf5rOV5byA57uD44CC'
+  'next2' = 'ICAg5YaN5biu5L2g6KOF5aW95a+55bqU57uE5Lu244CB5omT5byA572R6aG16K6p5L2g55m75b2V5o6I5p2D77yM5a6M5oiQ5ZCO5bCx6IO96YCJ55So5rOV5byA5aeL44CC'
 }
 $Site = if ($env:TIANJIE_SITE) { $env:TIANJIE_SITE } else { 'https://liyubuke.github.io/tianjie' }
 $SkillName = T $S.skill
@@ -92,9 +93,13 @@ try {
       if (Test-Path $dst) { Remove-Item -Recurse -Force $dst }
       Copy-Item -Recurse -Path $Src -Destination $dst
       Write-Host ("  [OK] " + $t[0] + "  ->  " + $dst)
+      $oldDst = Join-Path $t[1] (T $S.oldskill)
+      if (Test-Path $oldDst) { Remove-Item -Recurse -Force $oldDst }
     } catch { Write-Host ("  [!] " + (T $S.skip) + $t[1]) }
   }
 
+  $oldData = Join-Path $U (T $S.oldskill); $newData = Join-Path $U $SkillName
+  if ((Test-Path $oldData) -and -not (Test-Path $newData)) { Move-Item $oldData $newData }
   Write-Host ''; Write-Host (T $S.done)
   if ($host_) {
     Write-Host ''

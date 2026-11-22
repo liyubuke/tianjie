@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 录音笔天阶功法 · 一键安装（macOS / Linux）
+# 录音笔高阶用法 · 一键安装（macOS / Linux）
 # 用法：curl -fsSL https://liyubuke.github.io/tianjie/install.sh | bash
 #   在某个 AI 工具里执行：只装到这个工具。
 #   自己在终端执行：列出本机的 AI 工具，选择装到哪个。
@@ -8,7 +8,8 @@
 set -o pipefail
 
 SITE="${TIANJIE_SITE:-https://liyubuke.github.io/tianjie}"
-SKILL="录音笔天阶功法"
+SKILL="录音笔高阶用法"
+OLD_SKILL="录音笔天阶功法"   # 旧名，安装时顺手移除
 
 NO_DEPS=0; ASSUME_YES=0; WANT=""
 for a in "$@"; do
@@ -20,7 +21,7 @@ ok()   { printf '  [√] %s\n' "$*"; }
 warn() { printf '  [!] %s\n' "$*"; }
 
 say ""
-say "== 录音笔天阶功法 · 安装 =="
+say "== 录音笔高阶用法 · 安装 =="
 
 # ---------- 1. 准备技能包 ----------
 WORK="$(mktemp -d)"; trap 'rm -rf "${WORK}"' EXIT
@@ -107,10 +108,16 @@ for t in "${TOOLS[@]}"; do
   IFS='|' read -r name dir target <<<"$t"
   if mkdir -p "${dir}" 2>/dev/null && rm -rf "${dir}/${SKILL}" && cp -R "${SRC}" "${dir}/${SKILL}" 2>/dev/null; then
     ok "${name}  →  ${dir}/${SKILL}"
+    if [ -d "${dir}/${OLD_SKILL}" ]; then rm -rf "${dir}/${OLD_SKILL}" && ok "已移除旧版「${OLD_SKILL}」（${name}）"; fi
   else
     warn "${name}：没有写入权限（${dir}），已跳过"
   fi
 done
+
+# 旧版的个人设置文件夹改名接上（录音来源、知识库都保留）
+if [ -d "${HOME}/${OLD_SKILL}" ] && [ ! -e "${HOME}/${SKILL}" ]; then
+  mv "${HOME}/${OLD_SKILL}" "${HOME}/${SKILL}" && ok "个人设置已从 ~/${OLD_SKILL} 迁到 ~/${SKILL}"
+fi
 
 # ---------- 4. 下一步：选录音 App、装组件、登录授权（交给技能第 0 步） ----------
 FIRST="$(printf '%s' "${TOOLS[0]}" | cut -d'|' -f2)/${SKILL}/SKILL.md"
@@ -122,11 +129,11 @@ if [ -n "${HOST}" ]; then
   say "1. 立即读取 ${FIRST}，按其中「第 0 步」执行；"
   say "2. 先问用户用哪个录音 App（讯飞录音笔 App / 讯飞听见 App / Deepting App，可多选）；"
   say "3. 按用户的选择安装对应组件，并带用户完成账号登录和授权，直到检查通过；"
-  say "4. 然后进入「选功法」，让用户点选一门功法开练。"
-  say "5. 设置完成后，告诉用户以后怎么唤起：说「录音笔天阶功法」，或直接说要做的事（如「用这周的录音写周报」）。"
+  say "4. 然后进入「选用法」，让用户点选一种用法开始。"
+  say "5. 设置完成后，告诉用户以后怎么唤起：说「录音笔高阶用法」，或直接说要做的事（如「用这周的录音写周报」）。"
 else
   say "下一步："
-  say "1. 重启你的 AI 助手，对它说：录音笔天阶功法（Claude Code 里也可以输入 /录音笔天阶功法）"
+  say "1. 重启你的 AI 助手，对它说：录音笔高阶用法（Claude Code 里也可以输入 /录音笔高阶用法）"
   say "2. 它会先问你用哪个录音 App（讯飞录音笔 / 讯飞听见 / Deepting），"
-  say "   再帮你装好对应组件、打开网页让你登录授权，完成后就能选功法开练。"
+  say "   再帮你装好对应组件、打开网页让你登录授权，完成后就能选用法开始。"
 fi
